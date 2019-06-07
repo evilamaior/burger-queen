@@ -51,7 +51,7 @@ class Login extends React.Component {
                     <input className="input-style" placeholder="email" value={this.state.email} onChange={this.changeEmail}></input>
                     <input className="input-style" type="password" placeholder="senha" value={this.state.senha} onChange={this.changePassword}></input>
                     <button className="btn-style" onClick={this.singIn}>Entrar</button>
-                    <Link className="sing-in" to="/create-account">Ainda não tem uma conta?</Link>
+                    <Link className="sing-up" to="/create-account">Ainda não tem uma conta?</Link>
                 </form>
                 <footer className="footer">
                     <img className="img-footer" src="burger-queen.png" />
