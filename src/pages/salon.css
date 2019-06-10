@@ -2,6 +2,7 @@
     width: 100%;
     display: flex;
     flex-direction: column;
+    justify-content: center;
 }
 
 .logo {
@@ -16,6 +17,65 @@
     font-family: 'Righteous', cursive;
     font-size: 90px;
     color: #D84B26
+}
+
+.breakfast-menu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 5vw;
+}
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 5vw;
+    margin-bottom: 5vw;
+}
+
+.total {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.pointer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 400px;
+    height: 40px;
+    position: relative;
+    background: #D84B26;
+    margin-bottom: 5vw;
+}
+
+.pointer:after {
+    display: flex;
+    justify-content: center;
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    height: 0;
+    border-left: 20px solid white;
+    border-top: 20px solid transparent;
+    border-bottom: 20px solid transparent;
+}
+
+.pointer:before {
+    display: flex;
+    justify-content: center;
+    content: "";
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 0;
+    height: 0;
+    border-right: 20px solid white;
+    border-top: 20px solid transparent;
+    border-bottom: 20px solid transparent;
 }
 
 .footer {

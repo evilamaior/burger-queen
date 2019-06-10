@@ -44,7 +44,10 @@ class CreateAccount extends React.Component {
         this.props.createUserWithEmailAndPassword(email, password)
         .then(response => {
             const id = response.user.uid;
-            database.doc(`users/${id}`).set({nome: name, email: email, tipo: type});
+            database.doc(`users/${id}`).set({nome: name, email: email, tipo: type})
+        })
+        .then( () => {
+            this.props.history.push(`/${this.state.tipo}`);
         });
     }
 
