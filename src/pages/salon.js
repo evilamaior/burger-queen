@@ -8,6 +8,8 @@ class Salon extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            nome: "",
+            bag: [],
             itens: [
                 {
                     item: "Café americano",
@@ -98,19 +100,35 @@ class Salon extends React.Component {
         this.setState({ quantidade: event.target.value })
     } 
 
+    addToBag = (item) => {
+        const { bag } = this.state;
+        this.setState({
+            bag: [ ...bag, item ]
+        })
+    }
+
     render() {
+        const { itens } = this.state;
+        const { bag } = this.state;
         return (
             <main className="container">
                 <div className="breakfast-menu">
                     <div className="pointer">Breakfast</div>
-                        <ul>
+                        <ul className="container-menu">
                             {
-                                this.state.itens.map( (item,i) => {
+                                itens.map( (item,i) => {
                                     if (item.tipo === "manha") {
                                         return (
                                             <li key={i}>
-                                            <p>{item.item}</p>
-                                            <p>{item.valor}</p>
+                                            <p className="item">
+                                                <i
+                                                    onClick={() => {
+                                                        this.addToBag(item)
+                                                    }}
+                                                    className="fas fa-plus-circle"
+                                                /> 
+                                                {item.item}-</p>
+                                            <p className="value">R$ {item.valor}</p>
                                             </li>
                                         )
                                     }
@@ -121,14 +139,14 @@ class Salon extends React.Component {
                 
                 <div className="menu">
                     <div className="pointer">Menu</div>
-                        <ul>
+                        <ul className="container-menu">
                             {
-                                this.state.itens.map( (item,i) => {
+                                itens.map( (item,i) => {
                                         if (item.tipo === "tarde") {
                                             return (
                                                 <li key={i}>
-                                                <p>{item.item}</p>
-                                                <p>{item.valor}</p>
+                                                <p className="item">{item.item}-</p>
+                                                <p className="value">R$ {item.valor}</p>
                                                 </li>
                                             )
                                         }
@@ -139,6 +157,19 @@ class Salon extends React.Component {
 
                 <div className="total">
                     <div className="pointer">Resumo do pedido</div>
+                        <ul>
+                            {
+                                bag.map( (item, i) => {
+                                return(
+                                    <li key={i}>
+                                    <p className="item">{item.item}-</p>
+                                    <p className="value">R$ {item.valor}</p>
+                                    </li>
+                                )
+                                })
+                            }
+
+                        </ul>
                 </div>
 
                 <footer className="footer">
