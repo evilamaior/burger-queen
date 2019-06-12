@@ -43,11 +43,7 @@ class CreateAccount extends React.Component {
     this.props.createUserWithEmailAndPassword(email, password)
       .then(response => {
         const id = response.user.uid;
-        const user = firebase.auth().currentUser;
-        database
-          .doc(`users/${id}`)
-          .set({ nome: name, email: email, tipo: type });
-          user.updateProfile({displayName: `${this.state.name}`})
+        database.doc(`users/${id}`).set({ nome: name, email: email, tipo: type });
       })
       .then(() => {
         this.props.history.push(`/${this.state.tipo}`);
@@ -61,22 +57,15 @@ class CreateAccount extends React.Component {
           <h1 className="txt-logo">Burger Queen</h1>
         </header>
         <form className="container-form">
-          <input
-            className="input-style"
-            placeholder="nome"
+          <input className="input-style" placeholder="nome" 
             value={this.state.nome}
             onChange={this.changeName}
           />
-          <input
-            className="input-style"
-            placeholder="email"
+          <input className="input-style" placeholder="email"
             value={this.state.email}
             onChange={this.changeEmail}
           />
-          <input
-            className="input-style"
-            type="password"
-            placeholder="senha"
+          <input className="input-style" type="password" placeholder="senha"
             value={this.state.senha}
             onChange={this.changePassword}
           />
@@ -84,7 +73,7 @@ class CreateAccount extends React.Component {
             <option value="cozinha">Cozinha</option>
             <option value="salao">Salão</option>
           </select>
-          <button className="btn-style" onClick={this.singUp}>
+          <button className="btn-style" onClick={this.singUp}> 
             Criar conta
           </button>
           <Link className="sing-in" to="/">

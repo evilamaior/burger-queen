@@ -4,28 +4,36 @@ import menu from "../pages/menu";
 import firebase from "../firebaseConfig";
 import withFirebaseAuth from "react-with-firebase-auth";
 
+const firebaseAppAuth = firebase.auth();
+const database = firebase.firestore();
+
 class Salon extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      bag: []
+      bag: [],
+      total: 0,
+      cliente: ""
     };
   }
-
-  // changeAmount = (event) => {
-  //     this.setState({ quantidade: event.target.value })
-  // }
 
   addToBag = item => {
     const { bag } = this.state;
     const itemIndex = bag.findIndex(bagItem => bagItem.item === item.item);
     if (itemIndex >= 0) {
-      bag[itemIndex].quantidade++;
-      this.setState({ bag });
+      bag[itemIndex].quantidade++;    
+      const total = bag.reduce((acc, cur) => {
+            return acc + (cur.quantidade * cur.valor)
+      },0);
+      this.setState({ bag, total });
     } else {
       item.quantidade = 1;
+      const newBag = [...bag, item]
+      const total = newBag.reduce((acc, cur) => {
+        return acc + (cur.quantidade * cur.valor)
+      },0);
       this.setState({
-        bag: [...bag, item]
+        bag: newBag, total
       });
     }
   };
@@ -33,23 +41,30 @@ class Salon extends React.Component {
   removeToBag = item => {
     const { bag } = this.state;
     const itemIndex = bag.findIndex(bagItem => bagItem.item === item.item);
-    if (itemIndex >= 0) {
+    if (bag[itemIndex].quantidade > 1) {
       bag[itemIndex].quantidade--;
       this.setState({ bag });
     } else {
       bag.splice(itemIndex, 1);
       this.setState({
-        bag: [bag[itemIndex].quantidade--]
+        bag
       });
     }
   };
 
+  addCustomer = event => {
+    this.setState({ cliente: event.target.value });
+  }
+
   sendToKitchen = () => {
     const user = firebase.auth().currentUser;
+    const id = user.uid;
+    database.collection("orders").doc(id).set({ bag: this.state.bag, total: this.state.total, name: user.displayName, cliente: this.state.cliente});
   };
 
   render() {
     const { bag } = this.state;
+
     return (
       <main className="container">
         <div className="breakfast-menu">
@@ -123,6 +138,26 @@ class Salon extends React.Component {
           </ul>
         </div>
 
+        <div className="total-container">
+          <hr className="line" />
+          <p className="total">Total</p>
+          {this.state.total}
+        </div>
+
+        <div className="input-container">
+          <input className="input-style" placeholder="nome do cliente" value={this.state.cliente}
+          onChange={this.addCustomer}/>
+        </div>
+        
+
+        <div className="btn-container">
+          <button className="btn-style"
+            onClick={this.sendToKitchen}> 
+            Enviar para cozinha
+          </button>    
+        </div>
+        
+
         <footer className="footer">
           <img className="img-footer" src="burger-queen.png" />
         </footer>
@@ -131,8 +166,6 @@ class Salon extends React.Component {
   }
 }
 
-export default Salon;
-
-// export default withFirebaseAuth({
-//     firebaseAppAuth,
-// })(Salon);
+export default withFirebaseAuth({
+    firebaseAppAuth,
+})(Salon);
