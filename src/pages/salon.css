@@ -74,6 +74,18 @@
     align-items: center;
 }
 
+.fa-plus {
+    margin-right: 1vw;
+    font-size: 15px;
+    color: black;
+}
+
+.fa-minus {
+    margin-right: 1vw;
+    font-size: 15px;
+    color: black;
+}
+
 .item {
     display: inline-block;
     margin-bottom: 2vw;
@@ -87,6 +99,15 @@
     font-family: 'Montserrat', sans-serif;
     font-size: 15px;
     color: black;
+}
+
+.amount {
+    display: inline-block;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 15px;
+    color: black;
+    margin-left: 1vw;
+    margin-right: 1vw;
 }
 
 .footer {

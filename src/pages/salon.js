@@ -1,187 +1,137 @@
-import React from 'react';
-import './salon.css';
-import firebase from '../firebaseConfig';
-// import withFirebaseAuth from 'react-with-firebase-auth';
-
+import React from "react";
+import "./salon.css";
+import menu from "../pages/menu";
+import firebase from "../firebaseConfig";
+import withFirebaseAuth from "react-with-firebase-auth";
 
 class Salon extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            nome: "",
-            bag: [],
-            itens: [
-                {
-                    item: "Café americano",
-                    valor: "5",
-                    quantidade: "",
-                    tipo: "manha",
-                },
-                {
-                    item: "Café com leite",
-                    valor: "7",
-                    quantidade: "",
-                    tipo: "manha",
-                },
-                {
-                    item: "Sanduíche de presunto e queijo",
-                    valor: "10",
-                    quantidade: "",
-                    tipo: "manha",
-                },
-                {
-                    item: "Suco de fruta natural",
-                    valor: "7",
-                    quantidade: "",
-                    tipo: "manha",
-        
-                },
-                {
-                    item: "Hambúrguer simples",
-                    valor: "10",
-                    quantidade: "",
-                    tipo: "tarde",
-                },
-                {
-                    item: "Hambúrguer duplo",
-                    valor: "15",
-                    quantidade: "",
-                    tipo: "tarde",
-                },
-                {
-                    item: "Batata frita",
-                    valor: "5",
-                    quantidade: "",
-                    tipo: "tarde",
-                },
-                {
-                    item: "Anéis de cebola",
-                    valor: "5",
-                    quantidade: "",
-                    tipo: "tarde",
-                },
-                {
-                    item: "Água 500ml",
-                    valor: "5",
-                    quantidade: "",
-                    tipo: "tarde",
-                },
-                {
-                    item: "Água 750ml",
-                    valor: "7",
-                    quantidade: "",
-                    tipo: "tarde",
-                },
-                {
-                    item: "Bebida gaseificada 500ml",
-                    valor: "7",
-                    quantidade: "",
-                    tipo: "tarde",
-                },
-                {
-                    item: "Bebida gaseificada 750ml",
-                    valor: "10",
-                    quantidade: "",
-                    tipo: "tarde",
-                }
-            ]
-        }
+  constructor(props) {
+    super(props);
+    this.state = {
+      bag: []
+    };
+  }
+
+  // changeAmount = (event) => {
+  //     this.setState({ quantidade: event.target.value })
+  // }
+
+  addToBag = item => {
+    const { bag } = this.state;
+    const itemIndex = bag.findIndex(bagItem => bagItem.item === item.item);
+    if (itemIndex >= 0) {
+      bag[itemIndex].quantidade++;
+      this.setState({ bag });
+    } else {
+      item.quantidade = 1;
+      this.setState({
+        bag: [...bag, item]
+      });
     }
+  };
 
-    changeItem = (event) => {
-        this.setState({ item: event.target.value })
+  removeToBag = item => {
+    const { bag } = this.state;
+    const itemIndex = bag.findIndex(bagItem => bagItem.item === item.item);
+    if (itemIndex >= 0) {
+      bag[itemIndex].quantidade--;
+      this.setState({ bag });
+    } else {
+      bag.splice(itemIndex, 1);
+      this.setState({
+        bag: [bag[itemIndex].quantidade--]
+      });
     }
+  };
 
-    changeValue = (event) => {
-        this.setState({ valor: event.target.value })
-    }
+  sendToKitchen = () => {
+    const user = firebase.auth().currentUser;
+  };
 
-    changeAmount = (event) => {
-        this.setState({ quantidade: event.target.value })
-    } 
+  render() {
+    const { bag } = this.state;
+    return (
+      <main className="container">
+        <div className="breakfast-menu">
+          <div className="pointer">Breakfast</div>
+          <ul className="container-menu">
+            {menu.map((item, i) => {
+              if (item.tipo === "manha") {
+                return (
+                  <li key={i}>
+                    <p className="item">
+                      <i
+                        className="fas fa-plus"
+                        onClick={() => {
+                          this.addToBag(item);
+                        }}
+                      />
+                      {item.item}-
+                    </p>
+                    <p className="value">R$ {item.valor}</p>
+                  </li>
+                );
+              }
+            })}
+          </ul>
+        </div>
 
-    addToBag = (item) => {
-        const { bag } = this.state;
-        this.setState({
-            bag: [ ...bag, item ]
-        })
-    }
+        <div className="menu">
+          <div className="pointer">Menu</div>
+          <ul className="container-menu">
+            {menu.map((item, i) => {
+              if (item.tipo === "tarde") {
+                return (
+                  <li key={i}>
+                    <p className="item">
+                      <i
+                        className="fas fa-plus"
+                        onClick={() => {
+                          this.addToBag(item);
+                        }}
+                      />
+                      {item.item}-
+                    </p>
+                    <p className="value">R$ {item.valor}</p>
+                  </li>
+                );
+              }
+            })}
+          </ul>
+        </div>
 
-    render() {
-        const { itens } = this.state;
-        const { bag } = this.state;
-        return (
-            <main className="container">
-                <div className="breakfast-menu">
-                    <div className="pointer">Breakfast</div>
-                        <ul className="container-menu">
-                            {
-                                itens.map( (item,i) => {
-                                    if (item.tipo === "manha") {
-                                        return (
-                                            <li key={i}>
-                                            <p className="item">
-                                                <i
-                                                    onClick={() => {
-                                                        this.addToBag(item)
-                                                    }}
-                                                    className="fas fa-plus-circle"
-                                                /> 
-                                                {item.item}-</p>
-                                            <p className="value">R$ {item.valor}</p>
-                                            </li>
-                                        )
-                                    }
-                                })
-                            }
-                        </ul>
-                </div>
-                
-                <div className="menu">
-                    <div className="pointer">Menu</div>
-                        <ul className="container-menu">
-                            {
-                                itens.map( (item,i) => {
-                                        if (item.tipo === "tarde") {
-                                            return (
-                                                <li key={i}>
-                                                <p className="item">{item.item}-</p>
-                                                <p className="value">R$ {item.valor}</p>
-                                                </li>
-                                            )
-                                        }
-                                    })
-                            }
-                        </ul>
-                </div>
+        <div className="total">
+          <div className="pointer">Resumo do pedido</div>
+          <ul>
+            {bag.map((item, i) => {
+              return (
+                <li key={i}>
+                  <p className="amount">
+                    <i
+                      className="fas fa-minus"
+                      onClick={() => {
+                        this.removeToBag(item);
+                      }}
+                    />
+                    {item.quantidade}
+                  </p>
+                  <p className="item">{item.item}-</p>
+                  <p className="value">R$ {item.valor}</p>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
 
-                <div className="total">
-                    <div className="pointer">Resumo do pedido</div>
-                        <ul>
-                            {
-                                bag.map( (item, i) => {
-                                return(
-                                    <li key={i}>
-                                    <p className="item">{item.item}-</p>
-                                    <p className="value">R$ {item.valor}</p>
-                                    </li>
-                                )
-                                })
-                            }
-
-                        </ul>
-                </div>
-
-                <footer className="footer">
-                    <img className="img-footer" src="burger-queen.png" />
-                </footer>
-            </main>
-        );
-    }
+        <footer className="footer">
+          <img className="img-footer" src="burger-queen.png" />
+        </footer>
+      </main>
+    );
+  }
 }
 
-
-export default Salon
+export default Salon;
 
 // export default withFirebaseAuth({
 //     firebaseAppAuth,
