@@ -13,7 +13,8 @@ class Salon extends React.Component {
     this.state = {
       bag: [],
       total: 0,
-      cliente: ""
+      cliente: "",
+      nome: ""
     };
   }
 
@@ -56,14 +57,24 @@ class Salon extends React.Component {
     this.setState({ cliente: event.target.value });
   }
 
-  sendToKitchen = () => {
+  getName = () => {
     const user = firebase.auth().currentUser;
-    const id = user.uid;
-    database.collection("orders").doc(id).set({ bag: this.state.bag, total: this.state.total, name: user.displayName, cliente: this.state.cliente});
+    database.collection("users").doc(user.uid).get()
+      .then(response => {
+        const data = response.data();
+        const nome = data.nome;
+        this.setState({ nome })
+      });
+  }
+
+  sendToKitchen = () => {
+    console.log(this.state.nome)
+    database.collection("orders").add({ bag: this.state.bag, total: this.state.total, cliente: this.state.cliente, nome: this.state.nome});
   };
 
   render() {
     const { bag } = this.state;
+    this.getName();
 
     return (
       <main className="container">
