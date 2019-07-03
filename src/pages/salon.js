@@ -68,7 +68,6 @@ class Salon extends React.Component {
   }
 
   sendToKitchen = () => {
-    console.log(this.state.nome)
     database.collection("orders").add({ bag: this.state.bag, total: this.state.total, cliente: this.state.cliente, nome: this.state.nome});
   };
 
