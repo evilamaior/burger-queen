@@ -391,5 +391,3 @@ cd burger-queen
 * [ ] 70% ou mais em cobertura de _functions_.
 * [ ] 70% ou mais em cobertura de _lines_.
 * [ ] 70% ou mais em cobertura de _branches_.
-
-![Login](burger-queen-login.png)
