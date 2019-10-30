@@ -11,55 +11,38 @@ class Kitchen extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
-        bag: [],
-        cliente: "",
-        nome: "",
-        status: ""
+        orders: [],
       };
     }
-
-    getBag = () => {
-        database.collection("orders").doc().get()
-          .then((querySnapshot) => {
-            const data = querySnapshot.docs.map(doc => ({ ...doc.data() }));
-            this.setState({ bag:data })
-          })
+    componentDidMount() {
+      database.collection("orders").get()
+      .then((querySnapshot) => {    
+        const data = querySnapshot.docs.map(doc => ({ ...doc.data() }));
+        this.setState({ orders: data })
+      })
     }
 
-    getCliente = () => {
-        const user = firebase.auth().currentUser;
-        database.collection("orders").doc(user.uid).get()
-          .then(response => {
-            const data = response.data();
-            const cliente = data.cliente;
-            this.setState({ cliente })
-          });
-    }
 
     render() {
-        this.getBag();
         return (
-        <main className="container">
-            <div className="menu">
-                <div className="pointer">Pedidos</div>
-                <ul className="container-menu">
-                  {menu.map((item, i) => {
-                    return (
-                    <li key={i}>
-                      <p>{item.bag}</p>
-                      <p>{item.cliente}</p>
-                      <p>{item.nome}</p>
-                    </li>
-                    );
-                  })
-                  }
-                </ul>
-            </div>
-
-            <footer className="footer">
-                <img className="img-footer" src="burger-queen.png" />
-            </footer>
-        </main>
+          <div>
+            {
+              this.state.orders.map((order, i ) => {
+                return (
+                  <div key={i}>
+                    <h1>nome do funcionario: {order.nome}</h1>
+                    <h1>nome do cliente: {order.cliente}</h1>
+                    <h2>Itens do pedido</h2>
+                    {
+                      order.bag.map((item, i) => {
+                        return <div key={i}>{item.item}</div>
+                      })
+                    }
+                  </div>
+                )
+              })
+            }
+          </div>
         );
     }
 }
